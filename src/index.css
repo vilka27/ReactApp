@@ -1,0 +1,71 @@
+body {
+  margin: 0;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+#catalog{
+  margin:40px auto ;
+  width:800px;
+}
+#itemList{
+  display:grid;
+  grid-template-columns: 400px 400px;
+  grid-gap: 16px ;
+}
+.item{
+    box-shadow: 0 0 8px #999;
+    background-color: #fff;
+}
+#itemList > .item {
+    padding:8px;
+}
+#bigItem>.item{
+    padding:16px;
+}
+#bigItem>.item>h2{
+    font-size:50px;
+}
+.item_desc{
+    font-size: 24px;
+}
+h1{
+  font-size:50px;
+}
+#itemList>.item>img{
+    margin:auto;
+    max-height:50%;
+    width: 100%;
+}
+#bigItem>.item>img{
+    width:100%;
+}
+ footer{
+     padding:16px;
+     border-top: 1px solid grey;
+     height:100px;
+ }
+ a{
+     color: #282c34;
+     text-decoration: none;
+     font-style: italic;
+     font-size: 24px;
+ }
+ a,button{
+     opacity:0.5;
+ }
+ a:hover,button:hover{
+     opacity:1;
+ }
+ #backButton{
+     position:fixed;
+     left:18px;
+     top:18px;
+     width:calc(50vw - 450px);
+     height:200px;
+     background-color: #ffffff;
+     border:0 solid #fff;
+     font-size: 50px;
+ }
