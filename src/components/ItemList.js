@@ -6,7 +6,7 @@ function ItemList(props) {
     const items = props.items.map((item) =>
         <Item
             title={item.title}
-            urlToImage={item.urlToImage}
+            
             publishedAt={item.publishedAt}
             onclick={() => (props.onclick(item))}
         />);
