@@ -1,30 +1,27 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
 import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import Item from './Item';
-import Api from '../services/API';
+import Loader from './Loader';
+import { fetchArticleByDate } from '../actions';
 
 class BigItem extends React.Component {
   constructor(props) {
     super(props);
-    this.state = { item: {} };
-    if (props.match.params.title) {
-      const api = new Api();
-      api.getByTitle(this, props.match.params.title);
-    }
-    if (props.match.params.date) {
-      const api = new Api();
-      api.getByDate(this, props.match.params.date);
+    if (props.item == null && props.match.params.date) {
+      props.fetchItemByDate(props.match.params.date);
     }
   }
 
   render() {
-    const { item } = this.state;
-    const {
-      title, urlToImage, publishedAt, description, url, error,
-    } = item;
-    if (error) {
-      return (<h1>{error}</h1>);
+    const { item, isFetching } = this.props;
+    if (isFetching) {
+      return (<Loader />);
     }
+    const {
+      title, urlToImage, publishedAt, description, url,
+    } = item;
     return (
       <div id="bigItem">
         <Item
@@ -39,11 +36,36 @@ class BigItem extends React.Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  item: state.currentItem,
+  isFetching: state.isFetching,
+});
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchItemByDate: (date) => {
+      dispatch(fetchArticleByDate(date));
+    },
+  };
+}
+
 BigItem.defaultProps = {
   match: {},
-};
-BigItem.propTypes = {
-  match: PropTypes.object,
+  item: null,
+  fetchItemByDate: PropTypes.func,
+  isFetching: true,
 };
 
-export default BigItem;
+BigItem.propTypes = {
+  match: PropTypes.object,
+  item: PropTypes.shape({
+    title: PropTypes.string,
+    urlToImage: PropTypes.string,
+    publishedAt: PropTypes.string,
+    description: PropTypes.string,
+    url: PropTypes.string,
+  }),
+  fetchItemByDate: PropTypes.func,
+  isFetching: PropTypes.bool,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(BigItem);

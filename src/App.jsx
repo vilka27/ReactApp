@@ -1,4 +1,3 @@
-/* eslint-disable linebreak-style */
 import React from 'react';
 import { BrowserRouter, Route, Link } from 'react-router-dom';
 import { createBrowserHistory } from 'history';
@@ -12,10 +11,12 @@ function App() {
   return (
     <BrowserRouter history={history}>
       <div>
-        <ul>
-          <li><Link to="/">Catalog</Link></li>
-          <li><Link to="/about">About</Link></li>
-        </ul>
+        <nav>
+          <ul>
+            <li><Link to="/">Home</Link></li>
+            <li><Link to="/about">About</Link></li>
+          </ul>
+        </nav>
         <Route exact path="/" component={Catalog} />
         <Route exact path="/articles/:date" component={BigItem} />
         <Route exact path="/about" component={About} />

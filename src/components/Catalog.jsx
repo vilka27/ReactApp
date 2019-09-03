@@ -1,51 +1,82 @@
+/* eslint-disable react/forbid-prop-types */
 import React from 'react';
+import PropTypes from 'prop-types';
+import { connect } from 'react-redux';
 import ItemList from './ItemList';
 import Pagination from './Pagination';
-import Api from '../services/API';
+import Loader from './Loader';
+import { fetchArticles, setCurrentPage, setCurrentItem } from '../actions';
 
 class Catalog extends React.Component {
   constructor(props) {
     super(props);
-    this.state = {
-      items: [],
-      currentPage: 1,
-      totalItems: 0,
-      pageSize: 6,
-      error: null,
-    };
-    this.api = new Api();
-    const { currentPage } = this.state;
-    this.api.getByPage(this, currentPage);
-    this.setPage(1);
-  }
-
-  setPage(page) {
-    const { currentPage } = this.state;
-    if (page !== currentPage) {
-      this.api.getByPage(this, page);
+    if (!props.allItems || props.allItems.length < 5) {
+      props.fetchItems();
     }
   }
 
   render() {
     const {
-      currentPage, totalItems, pageSize, items, error,
-    } = this.state;
-    if (error) {
-      return (<h1>{error}</h1>);
+      currentPage, pageSize, allItems, setPage, setItem, isFetching,
+    } = this.props;
+    if (isFetching) {
+      return (<Loader />);
     }
+    const items = allItems.slice(pageSize * (currentPage - 1), pageSize * currentPage);
     return (
       <div id="catalog">
         <Pagination
           page={currentPage}
-          totalPages={Math.floor(totalItems / pageSize)}
-          oncl={(n) => (this.setPage(n))}
+          totalPages={Math.floor(allItems.length / pageSize)}
+          oncl={setPage}
         />
         <ItemList
           items={items}
+          itemOnClick={(item) => setItem(item)}
         />
       </div>
     );
   }
 }
 
-export default Catalog;
+const mapStateToProps = (state) => ({
+  currentPage: state.currentPage,
+  pageSize: state.pageSize,
+  allItems: state.items,
+  isFetching: state.isFetching,
+});
+function mapDispatchToProps(dispatch) {
+  return {
+    fetchItems: () => {
+      dispatch(fetchArticles());
+    },
+    setPage: (page) => {
+      dispatch(setCurrentPage(page));
+    },
+    setItem: (item) => {
+      dispatch(setCurrentItem(item));
+    },
+  };
+}
+
+Catalog.defaultProps = {
+  currentPage: 1,
+  pageSize: 6,
+  allItems: [],
+  setPage: PropTypes.func,
+  setItem: PropTypes.func,
+  fetchItems: PropTypes.func,
+  isFetching: true,
+};
+
+Catalog.propTypes = {
+  currentPage: PropTypes.number,
+  pageSize: PropTypes.number,
+  allItems: PropTypes.array,
+  setPage: PropTypes.func,
+  setItem: PropTypes.func,
+  fetchItems: PropTypes.func,
+  isFetching: PropTypes.bool,
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(Catalog);
