@@ -10,18 +10,16 @@ const history = createBrowserHistory();
 function App() {
   return (
     <BrowserRouter history={history}>
-      <div>
-        <nav>
-          <ul>
-            <li><Link to="/">Home</Link></li>
-            <li><Link to="/about">About</Link></li>
-          </ul>
-        </nav>
-        <Route exact path="/" component={Catalog} />
-        <Route exact path="/articles/:date" component={BigItem} />
-        <Route exact path="/about" component={About} />
+      <nav>
+        <ul>
+          <li><Link to="/">Home</Link></li>
+          <li><Link to="/about">About</Link></li>
+        </ul>
+      </nav>
+      <Route exact path="/" component={Catalog} />
+      <Route exact path="/articles/:date" component={BigItem} />
+      <Route exact path="/about" component={About} />
 
-      </div>
     </BrowserRouter>
   );
 }

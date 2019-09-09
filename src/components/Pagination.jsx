@@ -12,18 +12,14 @@ function Pagination(props) {
         type="button"
         disabled={(page === 1)}
         onClick={() => oncl(1)}
-      >
-          ⭰
-      </button>
+      />
       <button
         id="paginationPrev"
         className="paginationButton"
         disabled={(page === 1)}
         onClick={() => oncl(page - 1)}
         type="button"
-      >
-         🡨
-      </button>
+      />
       <div className="paginationButton">{page}</div>
       <button
         id="paginationNext"
@@ -31,18 +27,14 @@ function Pagination(props) {
         disabled={page === totalPages}
         onClick={() => oncl(page + 1)}
         type="button"
-      >
-           🡪
-      </button>
+      />
       <button
         id="paginationLast"
         className="paginationButton"
         disabled={page === totalPages}
         onClick={() => oncl(totalPages)}
         type="button"
-      >
-                        ⭲
-      </button>
+      />
       <span className="space" />
     </div>
   );

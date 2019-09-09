@@ -18,11 +18,29 @@ li{
 	list-style-type: none;
 	flex: 1 0 100px;
 }
+#bigItem{
+	width:816px;
+}
 #catalog,#bigItem{
   margin:20px auto ;
-  width:816px;
+  
+  min-height:220px;
+}
+#catalog{
+	width:100%;
+	display:grid;
+	grid-template-areas: ". pagination ."
+				"sidebar items .";
+	grid-template-columns: 1fr 816px 1fr;		
+}
+#sidebar{
+	grid-area:sidebar;
+}
+#pagination{
+	grid-area: pagination;
 }
 #itemList{
+	grid-area:items;
   display:grid;
   grid-template-columns: 400px 400px;
   grid-gap: 16px ;
@@ -75,34 +93,51 @@ img{
  a,button{
      opacity:0.5;
  }
- a:hover:enabled,button:hover:enabled{
+ a:hover:enabled,button:hover:enabled,input:enabled,label{
      opacity:1;
      cursor:pointer;
  }
- #backButton{
-     position:fixed;
-     left:18px;
-     top:100px;
-     width:calc(50vw - 450px);
-     height:200px;
-     background-color: #ffffff;
-     border:0 solid #fff;
-     font-size: 50px;
- }
+
 #pagination{
+	margin-top:10px;
     display:flex;
     text-align: center;
+	margin-bottom:16px;
 }
 .paginationButton{
     flex-grow:0;
     flex-shrink: 0;
     flex-basis:30px;
-    line-height:26px;
+	line-height: 28px;
     height:30px;
     background: #fff;
     border-width:0;
+	background-repeat: no-repeat;
+	background-size: 100%;
 }
 .space{
     flex-grow:1;
 }
+#sidebar{
+	margin: 0px auto;
+	padding:8px;
+	padding-left:24px;
+	font-size: 20px;
+}
 
+#filter{
+display:flex;
+	flex-direction: column;
+}
+#paginationFirst{
+	background-image: url(images/first.svg);
+}
+#paginationPrev{
+	background-image: url(images/previous.svg);
+}
+#paginationNext{
+	background-image: url(images/next.svg);
+}
+#paginationLast{
+	background-image: url(images/last.svg);
+}

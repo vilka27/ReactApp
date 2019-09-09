@@ -7,10 +7,10 @@ import Loader from './Loader';
 import { fetchArticleByDate } from '../actions';
 
 class BigItem extends React.Component {
-  constructor(props) {
-    super(props);
-    if (props.item == null && props.match.params.date) {
-      props.fetchItemByDate(props.match.params.date);
+  componentDidMount() {
+    const { match, item, fetchItemByDate } = this.props;
+    if (match.params.date && !item) {
+      fetchItemByDate(match.params.date);
     }
   }
 

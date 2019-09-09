@@ -5,6 +5,7 @@ import {
   RECEIVE_ARTICLES,
   REQUEST_ARTICLE_BY_DATE,
   RECEIVE_ARTICLE_BY_DATE,
+  FILTER_SOURSE,
 } from './actionTypes';
 
 export function setCurrentPage(currentPage) {
@@ -48,17 +49,31 @@ export function receiveArticles(json) {
   };
 }
 
-export function fetchArticles() {
-  const baseUrl = 'https://newsapi.org/v2/everything?';
-  const params = ['language=ru',
-    'apiKey=568e0f13627645c48300f3fd0bfc0ee0',
-    'sources=rbc',
-    'page=1',
-    'pageSize=100'];
-  const url = baseUrl + params.join('&');
-  return function doJson(dispatch) {
-    dispatch(requestArticles());
+export function filterSource(showSources){	
+	return{
+		type: FILTER_SOURSE,
+		filter: showSources,
+	}
+}
 
+export function fetchArticlesByTitle(title="") {
+	 const baseUrl = 'https://newsapi.org/v2/everything?';
+	 const domains = [
+    'fontanka.ru',
+    'lenta.ru',
+    'rt.com',
+    'nplus1.ru',
+    'www.rbc.ru'];
+	 const params = ['language=ru',
+    'apiKey=568e0f13627645c48300f3fd0bfc0ee0',
+    `domains=${domains.join(',')}`,
+    'page=1',
+    'pageSize=100',
+	`qInTitle=${title}`];
+
+	const url = baseUrl + params.join('&');
+	return function doJson(dispatch) {
+    dispatch(requestArticles());
     return fetch(url)
       .then((response) => response.json())
       .then((json) => {
@@ -66,12 +81,17 @@ export function fetchArticles() {
       });
   };
 }
-
 export function fetchArticleByDate(date) {
   const baseUrl = 'https://newsapi.org/v2/everything?';
+  const domains = [
+    'fontanka.ru',
+    'lenta.ru',
+    'rt.com',
+    'nplus1.ru',
+    'www.rbc.ru'];
   const params = ['language=ru',
     'apiKey=568e0f13627645c48300f3fd0bfc0ee0',
-    'sources=rbc',
+    `domains=${domains.join(',')}`,
     'page=1',
     'pageSize=1',
     `from=${date}`,

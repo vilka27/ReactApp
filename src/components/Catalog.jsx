@@ -5,13 +5,15 @@ import { connect } from 'react-redux';
 import ItemList from './ItemList';
 import Pagination from './Pagination';
 import Loader from './Loader';
-import { fetchArticles, setCurrentPage, setCurrentItem } from '../actions';
+import Filter from './Filter';
+import SearchByTitle from './SerchByTitle';
+import { fetchArticlesByTitle, setCurrentPage, setCurrentItem } from '../actions';
 
 class Catalog extends React.Component {
-  constructor(props) {
-    super(props);
-    if (!props.allItems || props.allItems.length < 5) {
-      props.fetchItems();
+  componentDidMount() {
+    const { allItems, fetchItems } = this.props;
+    if (!allItems || allItems.length < 2) {
+      fetchItems();
     }
   }
 
@@ -30,6 +32,10 @@ class Catalog extends React.Component {
           totalPages={Math.floor(allItems.length / pageSize)}
           oncl={setPage}
         />
+        <div id="sidebar">
+          <Filter />
+          <SearchByTitle />
+        </div>
         <ItemList
           items={items}
           itemOnClick={(item) => setItem(item)}
@@ -42,13 +48,13 @@ class Catalog extends React.Component {
 const mapStateToProps = (state) => ({
   currentPage: state.currentPage,
   pageSize: state.pageSize,
-  allItems: state.items,
+  allItems: state.items.filter((item) => state.sourceFilter.includes(item.source.name)),
   isFetching: state.isFetching,
 });
 function mapDispatchToProps(dispatch) {
   return {
     fetchItems: () => {
-      dispatch(fetchArticles());
+      dispatch(fetchArticlesByTitle());
     },
     setPage: (page) => {
       dispatch(setCurrentPage(page));

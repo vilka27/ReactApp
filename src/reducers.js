@@ -5,12 +5,15 @@ import {
   RECEIVE_ARTICLES,
   REQUEST_ARTICLE_BY_DATE,
   RECEIVE_ARTICLE_BY_DATE,
+  FILTER_SOURSE,
 } from './actionTypes';
 
 function currentPage(state = 1, action) {
   switch (action.type) {
     case SET_CURRENT_PAGE:
       return action.currentPage;
+	case FILTER_SOURSE:
+		return 1;  
     default:
       return state;
   }
@@ -53,12 +56,35 @@ function pageSize(state = 6) {
   return state;
 }
 
+function sourceFilter(state = [
+	'Fontanka.ru',
+	'Lenta',
+	'Nplus1.ru',
+	'RT',
+	'RBC',
+], action){
+	switch(action.type){
+		case FILTER_SOURSE:
+			return action.filter.slice();
+		case RECEIVE_ARTICLES:
+			return [
+	'Fontanka.ru',
+	'Lenta',
+	'Nplus1.ru',
+	'RT',
+	'RBC',
+];
+	}
+	return state;
+}
+
 export const reducer = combineReducers({
   currentItem,
   currentPage,
   items,
   isFetching,
   pageSize,
+  sourceFilter,
 });
 
 export default reducer;
