@@ -2,22 +2,26 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Spinner } from 'reactstrap';
 import Item from './Item';
-import Loader from './Loader';
+import Error from './Error';
 import { fetchArticleByDate } from '../actions';
 
 class BigItem extends React.Component {
-  constructor(props) {
-    super(props);
-    if (props.item == null && props.match.params.date) {
-      props.fetchItemByDate(props.match.params.date);
+  componentDidMount() {
+    const { match, item, fetchItemByDate } = this.props;
+    if (match.params.date && !item) {
+      fetchItemByDate(match.params.date);
     }
   }
 
   render() {
-    const { item, isFetching } = this.props;
+    const { item, isFetching, error } = this.props;
     if (isFetching) {
-      return (<Loader />);
+      return (<Spinner color="dark" />);
+    }
+    if (error !== null) {
+      return <Error error={error} />;
     }
     const {
       title, urlToImage, publishedAt, description, url,
@@ -39,6 +43,7 @@ class BigItem extends React.Component {
 const mapStateToProps = (state) => ({
   item: state.currentItem,
   isFetching: state.isFetching,
+  error: state.error,
 });
 function mapDispatchToProps(dispatch) {
   return {
@@ -53,9 +58,11 @@ BigItem.defaultProps = {
   item: null,
   fetchItemByDate: PropTypes.func,
   isFetching: true,
+  error: null,
 };
 
 BigItem.propTypes = {
+  error: PropTypes.object,
   match: PropTypes.object,
   item: PropTypes.shape({
     title: PropTypes.string,

@@ -3,33 +3,43 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import ItemList from './ItemList';
-import Pagination from './Pagination';
+import PaginationComp from './PaginationComp';
 import Loader from './Loader';
-import { fetchArticles, setCurrentPage, setCurrentItem } from '../actions';
+import Filter from './Filter';
+import SearchByTitle from './SerchByTitle';
+import Error from './Error';
+import { fetchArticlesByTitle, setCurrentPage, setCurrentItem } from '../actions';
 
 class Catalog extends React.Component {
-  constructor(props) {
-    super(props);
-    if (!props.allItems || props.allItems.length < 5) {
-      props.fetchItems();
+  componentDidMount() {
+    const { allItems, fetchItems } = this.props;
+    if (!allItems || allItems.length < 2) {
+      fetchItems();
     }
   }
 
   render() {
     const {
-      currentPage, pageSize, allItems, setPage, setItem, isFetching,
+      currentPage, pageSize, allItems, setPage, setItem, isFetching, error,
     } = this.props;
     if (isFetching) {
       return (<Loader />);
     }
+    if (error !== null) {
+      return <Error error={error} />;
+    }
     const items = allItems.slice(pageSize * (currentPage - 1), pageSize * currentPage);
     return (
       <div id="catalog">
-        <Pagination
+        <PaginationComp
           page={currentPage}
           totalPages={Math.floor(allItems.length / pageSize)}
           oncl={setPage}
         />
+        <div id="sidebar">
+          <Filter />
+          <SearchByTitle />
+        </div>
         <ItemList
           items={items}
           itemOnClick={(item) => setItem(item)}
@@ -42,13 +52,14 @@ class Catalog extends React.Component {
 const mapStateToProps = (state) => ({
   currentPage: state.currentPage,
   pageSize: state.pageSize,
-  allItems: state.items,
+  allItems: state.items.filter((item) => state.sourceFilter.includes(item.source.name)),
   isFetching: state.isFetching,
+  error: state.error,
 });
 function mapDispatchToProps(dispatch) {
   return {
     fetchItems: () => {
-      dispatch(fetchArticles());
+      dispatch(fetchArticlesByTitle());
     },
     setPage: (page) => {
       dispatch(setCurrentPage(page));
@@ -67,6 +78,7 @@ Catalog.defaultProps = {
   setItem: PropTypes.func,
   fetchItems: PropTypes.func,
   isFetching: true,
+  error: null,
 };
 
 Catalog.propTypes = {
@@ -77,6 +89,7 @@ Catalog.propTypes = {
   setItem: PropTypes.func,
   fetchItems: PropTypes.func,
   isFetching: PropTypes.bool,
+  error: PropTypes.object,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(Catalog);

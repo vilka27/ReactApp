@@ -2,9 +2,12 @@ import {
   SET_CURRENT_ITEM,
   SET_CURRENT_PAGE,
   REQUEST_ARTICLES,
-  RECEIVE_ARTICLES,
   REQUEST_ARTICLE_BY_DATE,
-  RECEIVE_ARTICLE_BY_DATE,
+  FILTER_SOURSE,
+  RECEIVE_ARTICLES_SUCCESS,
+  RECEIVE_ARTICLE_BY_DATE_SUCCESS,
+  RECEIVE_ARTICLES_FAILURE,
+  RECEIVE_ARTICLE_BY_DATE_FAILURE,
 } from './actionTypes';
 
 export function setCurrentPage(currentPage) {
@@ -30,11 +33,12 @@ export function requestArticleByDate(date) {
 
 export function receiveArticleByDate(date, json) {
   return {
-    type: RECEIVE_ARTICLE_BY_DATE,
+    type: RECEIVE_ARTICLE_BY_DATE_SUCCESS,
     date,
     currentItem: json.articles[0],
   };
 }
+
 
 export function requestArticles() {
   return {
@@ -43,35 +47,71 @@ export function requestArticles() {
 }
 export function receiveArticles(json) {
   return {
-    type: RECEIVE_ARTICLES,
+    type: RECEIVE_ARTICLES_SUCCESS,
     items: json.articles,
   };
 }
 
-export function fetchArticles() {
-  const baseUrl = 'https://newsapi.org/v2/everything?';
-  const params = ['language=ru',
-    'apiKey=568e0f13627645c48300f3fd0bfc0ee0',
-    'sources=rbc',
-    'page=1',
-    'pageSize=100'];
-  const url = baseUrl + params.join('&');
-  return function doJson(dispatch) {
-    dispatch(requestArticles());
-
-    return fetch(url)
-      .then((response) => response.json())
-      .then((json) => {
-        dispatch(receiveArticles(json));
-      });
+export function receiveArticlesFailure(error) {
+  return {
+    type: RECEIVE_ARTICLES_FAILURE,
+    error,
+  };
+}
+export function receiveArticleByDateFailure(error) {
+  return {
+    type: RECEIVE_ARTICLE_BY_DATE_FAILURE,
+    error,
+  };
+}
+export function filterSource(showSources) {
+  return {
+    type: FILTER_SOURSE,
+    filter: showSources,
   };
 }
 
-export function fetchArticleByDate(date) {
+export function fetchArticlesByTitle(title = '') {
   const baseUrl = 'https://newsapi.org/v2/everything?';
+  const domains = [
+    'fontanka.ru',
+    'lenta.ru',
+    'rt.com',
+    'nplus1.ru',
+    'www.rbc.ru'];
   const params = ['language=ru',
     'apiKey=568e0f13627645c48300f3fd0bfc0ee0',
-    'sources=rbc',
+    `domains=${domains.join(',')}`,
+    'page=1',
+    'pageSize=100',
+    `qInTitle=${title}`];
+
+  const url = baseUrl + params.join('&');
+  return function doJson(dispatch) {
+    dispatch(requestArticles());
+    return fetch(url)
+      .then((response) => response.json(), () => { throw new Error('Something went wrong'); })
+      .then((json) => {
+        if (json.status === 'ok') {
+          dispatch(receiveArticles(json));
+        } else {
+          throw new Error(json.message);
+        }
+      })
+      .catch((e) => receiveArticlesFailure(e));
+  };
+}
+export function fetchArticleByDate(date) {
+  const baseUrl = 'https://newsapi.org/v2/everything?';
+  const domains = [
+    'fontanka.ru',
+    'lenta.ru',
+    'rt.com',
+    'nplus1.ru',
+    'www.rbc.ru'];
+  const params = ['language=ru',
+    'apiKey=568e0f13627645c48300f3fd0bfc0ee0',
+    `domains=${domains.join(',')}`,
     'page=1',
     'pageSize=1',
     `from=${date}`,
@@ -80,9 +120,14 @@ export function fetchArticleByDate(date) {
   return function doJsonByDate(dispatch) {
     dispatch(requestArticleByDate(date));
     return fetch(url)
-      .then((response) => response.json())
+      .then((response) => response.json(), () => { throw new Error('Something went wrong'); })
       .then((json) => {
-        dispatch(receiveArticleByDate(date, json));
-      });
+        if (json.status === 'ok') {
+          dispatch(receiveArticleByDate(date, json));
+        } else {
+          throw new Error(json.message);
+        }
+      })
+      .catch((e) => receiveArticleByDateFailure(e));
   };
 }
