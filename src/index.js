@@ -9,6 +9,8 @@ import { logger } from 'redux-logger';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
 import { reducer } from './reducers';
+import 'bootstrap/dist/css/bootstrap.min.css';
+
 
 const store = createStore(reducer, applyMiddleware(
   thunkMiddleware,

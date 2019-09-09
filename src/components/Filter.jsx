@@ -2,6 +2,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
+import { Input, Label } from 'reactstrap';
 import { filterSource } from '../actions';
 
 function Filter(props) {
@@ -21,21 +22,23 @@ function Filter(props) {
       checked = false;
     }
     return (
-      <span>
-        <input type="checkbox" id={item} name={item} checked={checked} onInput={() => props.toggleSource(item, props.sourceFilter)} />
-        <label htmlFor={item}>{item}</label>
-      </span>
+      <li>
+        <Input type="checkbox" id={item} name={item} checked={checked} onInput={() => props.toggleSource(item, props.sourceFilter)} />
+        <Label htmlFor={item}>{item}</Label>
+      </li>
     );
   });
   return (
     <div id="filter">
       <h4>Источник:</h4>
-      {checkBoxes}
+      <ul>
+        {checkBoxes}
+      </ul>
     </div>
   );
 }
 const mapStateToProps = (state) => ({
-  sourceFilter: state.sourceFilter,
+  sourceFilter: state.sourceFilter.slice(),
 });
 
 function mapDispatchToProps(dispatch) {
@@ -45,7 +48,8 @@ function mapDispatchToProps(dispatch) {
       if (listOfSources.includes(source)) {
         newList = listOfSources.filter((item) => item !== source);
       } else {
-        newList = listOfSources.slice().push(source);
+        newList = listOfSources.slice();
+        newList.push(source);
       }
       dispatch(filterSource(newList));
     },
