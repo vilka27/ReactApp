@@ -1,4 +1,5 @@
 import { combineReducers } from 'redux';
+import { initialState } from './initialState';
 import {
   SET_CURRENT_ITEM, SET_CURRENT_PAGE,
   REQUEST_ARTICLES,
@@ -10,18 +11,19 @@ import {
   RECEIVE_ARTICLES_FAILURE,
 } from './actionTypes';
 
-function currentPage(state = 1, action) {
+export function currentPage(state = initialState.currentPage, action) {
   switch (action.type) {
     case SET_CURRENT_PAGE:
       return action.currentPage;
     case FILTER_SOURSE:
+    case RECEIVE_ARTICLES_SUCCESS:
       return 1;
     default:
       return state;
   }
 }
 
-function currentItem(state = null, action) {
+export function currentItem(state = initialState.currentItem, action) {
   switch (action.type) {
     case SET_CURRENT_ITEM:
       return action.currentItem;
@@ -34,7 +36,7 @@ function currentItem(state = null, action) {
       return state;
   }
 }
-function items(state = [], action) {
+export function items(state = initialState.items, action) {
   switch (action.type) {
     case RECEIVE_ARTICLES_SUCCESS:
       return action.items;
@@ -42,7 +44,7 @@ function items(state = [], action) {
       return state;
   }
 }
-function isFetching(state = true, action) {
+export function isFetching(state = initialState.isFetching, action) {
   switch (action.type) {
     case REQUEST_ARTICLE_BY_DATE:
     case REQUEST_ARTICLES:
@@ -57,35 +59,22 @@ function isFetching(state = true, action) {
   }
 }
 
-function pageSize(state = 6) {
+export function pageSize(state = initialState.pageSize) {
   return state;
 }
 
-function sourceFilter(state = [
-  'Fontanka.ru',
-  'Lenta',
-  'Nplus1.ru',
-  'RT',
-  'RBC',
-], action) {
+export function sourceFilter(state = initialState.sourceFilter, action) {
   switch (action.type) {
     case FILTER_SOURSE:
       return action.filter.slice();
-    case RECEIVE_ARTICLES_FAILURE:
     case RECEIVE_ARTICLES_SUCCESS:
-      return [
-        'Fontanka.ru',
-        'Lenta',
-        'Nplus1.ru',
-        'RT',
-        'RBC',
-      ];
+      return initialState.sourceFilter.slice();
     default:
       return state;
   }
 }
 
-function error(state = null, action) {
+export function error(state = initialState.error, action) {
   switch (action.type) {
     case RECEIVE_ARTICLES_FAILURE:
     case RECEIVE_ARTICLE_BY_DATE_FAILURE:
