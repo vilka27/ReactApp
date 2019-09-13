@@ -1,4 +1,4 @@
-const testResponse = {
+export const testResponse = {
   status: 'ok',
   totalResults: 427,
   articles: [
@@ -77,5 +77,24 @@ const testResponse = {
       urlToImage: 'https://nplus1.ru/images/2019/08/26/775629314ac93f7cfc4595a523fddf83.gif',
     },
   ],
+};
+export const testResponseError = {
+  status: 'error',
+  code: 'apiKeyMissing',
+  message: 'Something went wrong. Api key missing',
+};
+export const testResponseByDate = {
+  status: 'ok',
+  totalResults: 1,
+  articles: [
+    {
+      author: null,
+      description: 'Samsung выпустила огромный телефон за 90 тысяч рублей. Кому он нужен?',
+      publishedAt: '2019-08-26T21:06:00Z',
+      source: { id: 'lenta', name: 'Lenta' },
+      title: 'Куда уж больше! - Lenta.ru',
+      url: 'https://lenta.ru/articles/2019/08/27/note/',
+      urlToImage: 'https://icdn.lenta.ru/images/2019/08/23/19/20190823194617066/detail_e46e4890628d55fa6b5a9d1efd28d9d3.jpg',
+    }],
 };
 export default testResponse;

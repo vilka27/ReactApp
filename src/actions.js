@@ -9,7 +9,7 @@ import {
   RECEIVE_ARTICLES_FAILURE,
   RECEIVE_ARTICLE_BY_DATE_FAILURE,
 } from './actionTypes';
-import { URL } from './APIconf';
+import URL from './APIconf';
 
 export function setCurrentPage(currentPage) {
   return {
