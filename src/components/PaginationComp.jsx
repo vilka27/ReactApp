@@ -7,10 +7,10 @@ function PaginationComp(props) {
   return (
     <Pagination>
       <PaginationItem disabled={(page === 1)} onClick={() => oncl(1)}>
-        <PaginationLink first />
+        <PaginationLink first disabled={(page === 1)} />
       </PaginationItem>
       <PaginationItem disabled={(page === 1)} onClick={() => oncl(page - 1)}>
-        <PaginationLink previous />
+        <PaginationLink previous disabled={(page === 1)} />
       </PaginationItem>
       <PaginationItem active>
         <PaginationLink>{page}</PaginationLink>
@@ -19,13 +19,13 @@ function PaginationComp(props) {
         disabled={page === totalPages}
         onClick={() => oncl(page + 1)}
       >
-        <PaginationLink next />
+        <PaginationLink next disabled={page === totalPages}/>
       </PaginationItem>
       <PaginationItem
         disabled={page === totalPages}
         onClick={() => oncl(totalPages)}
       >
-        <PaginationLink last />
+        <PaginationLink last disabled={page === totalPages}/>
       </PaginationItem>
     </Pagination>
   );

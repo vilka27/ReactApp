@@ -9,6 +9,7 @@ import {
   FILTER_SOURSE,
   RECEIVE_ARTICLES_SUCCESS,
   RECEIVE_ARTICLES_FAILURE,
+  SET_PAGE_SIZE,
 } from './actionTypes';
 
 export function currentPage(state = initialState.currentPage, action) {
@@ -17,6 +18,7 @@ export function currentPage(state = initialState.currentPage, action) {
       return action.currentPage;
     case FILTER_SOURSE:
     case RECEIVE_ARTICLES_SUCCESS:
+	case SET_PAGE_SIZE:	
       return 1;
     default:
       return state;
@@ -59,8 +61,13 @@ export function isFetching(state = initialState.isFetching, action) {
   }
 }
 
-export function pageSize(state = initialState.pageSize) {
-  return state;
+export function pageSize(state = initialState.pageSize, action) {
+	switch(action.type){
+		case SET_PAGE_SIZE:
+			return action.size;
+		default:
+			return state;
+	}
 }
 
 export function sourceFilter(state = initialState.sourceFilter, action) {

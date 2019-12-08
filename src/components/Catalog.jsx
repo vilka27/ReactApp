@@ -7,6 +7,7 @@ import PaginationComp from './PaginationComp';
 import Loader from './Loader';
 import Filter from './Filter';
 import SearchByTitle from './SerchByTitle';
+import PageSizeChanger from './PageSizeChanger';
 import Error from './Error';
 import { fetchArticlesByTitle, setCurrentPage, setCurrentItem } from '../actions';
 
@@ -33,12 +34,13 @@ class Catalog extends React.Component {
       <div id="catalog">
         <PaginationComp
           page={currentPage}
-          totalPages={Math.floor(allItems.length / pageSize)}
+          totalPages={Math.ceil(allItems.length / pageSize)}
           oncl={setPage}
         />
         <div id="sidebar">
           <Filter />
           <SearchByTitle />
+		  <PageSizeChanger />
         </div>
         <ItemList
           items={items}

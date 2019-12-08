@@ -8,9 +8,15 @@ import {
   RECEIVE_ARTICLE_BY_DATE_SUCCESS,
   RECEIVE_ARTICLES_FAILURE,
   RECEIVE_ARTICLE_BY_DATE_FAILURE,
+  SET_PAGE_SIZE,
 } from './actionTypes';
 import URL from './APIconf';
-
+export function setPageSize(size){
+	return{
+		type: SET_PAGE_SIZE,
+		size,
+	};
+}
 export function setCurrentPage(currentPage) {
   return {
     type: SET_CURRENT_PAGE,
